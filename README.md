@@ -1,33 +1,9 @@
-[# vue-netease-music
-仿网易云音乐移动端项目😘
-API来源：[Binaryify/NeteaseCloudMusicApi](https://github.com/Binaryify/NeteaseCloudMusicApi)
-## Project setup
-```
-npm install
-```
-
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
-
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-](# vue-CloudMusic
-
 通过 Vue 框架开发的仿网易云音乐移动端项目 😘
 API 来源：[Binaryify/NeteaseCloudMusicApi](https://github.com/Binaryify/NeteaseCloudMusicApi)
 
 
 ### 可能用到的API
-####　信息获取
+#### 信息获取
 * 登录相关
   * 获取用户详情
   * 获取用户信息、歌单、收藏数量
