@@ -1,11 +1,10 @@
 //发送拦截请求
 import Vue from "vue";
 import axios from "axios";
-import { Toast } from "mint-ui";
 
 //创建axios实例
 export const instance = axios.create({
-  baseURL: "http://localhost:7071", //基础请求地址
+  baseURL: "http://localhost:3000", //基础请求地址
   timeout: 10 * 1000 //超时时间
 });
 
@@ -26,7 +25,6 @@ instance.interceptors.response.use(
   },
   error => {
     //输出错误信息
-    Toast(error.message);
     return Promise.reject(error);
   }
 );
