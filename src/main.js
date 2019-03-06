@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import App from './App.vue'
 import router from '@/router';
+import store from '@/store';
 Vue.config.productionTip = false
 
 // 消除 click 移动浏览器300ms延迟
@@ -18,5 +19,6 @@ Vue.use(VueLazyload, {
 
 new Vue({
   router,
+  store,
   render: h => h(App),
 }).$mount('#app')

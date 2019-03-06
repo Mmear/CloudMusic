@@ -60,17 +60,21 @@
         <section class="list-wrapper music-list">
           <span class="list-title">最新音乐</span>
           <div class="list-ctn flex">
-            <div v-for="(music, index) in musicList" :key="index" class="list-item">
+            <div 
+              v-for="(music, index) in musicList" 
+              @click="simpliedInsertSong(music)"
+              :key="index" 
+              class="list-item">
               <div class="img-wrapper">
                 <img :src="music.album.blurPicUrl">
               </div>
               <span class="item-text">{{music.name}}</span>
-              <span class="artist-text">{{music.artists[0].name}}</span>
+              <span class="artist-text">{{_artistFormatter(music.artists)}}</span>
             </div>
           </div>
         </section>
         <!-- 加载图标 -->
-        <div class="loading-wrapper">
+        <div v-show="!colList.length" class="loading-wrapper">
           <loading></loading>
         </div>
       </div>
@@ -83,8 +87,8 @@ import scrollPane from "@/components/common/CmScroll";
 import slider from "@/components/common/CmSlider";
 import loading from "@/components/common/CmLoading";
 import divider from '@/components/common/CmDivider';
-import { recommend } from "@/api/query";
-
+import { recommend } from "@/api/recommendQuery";
+import {mapActions} from 'vuex';
 // 针对mini播放器的混入设置
 // import mixin from '@/utils/mixin.js'
 export default {
@@ -104,6 +108,7 @@ export default {
     this.$refs.scroll.refresh();
   },
   methods: {
+    
     // 获取轮播图数据
     _getBanners() {
       recommend.getBanners()
@@ -123,11 +128,18 @@ export default {
           // console.log(this.colList);
         })
     },
+    // 获取推荐音乐/最新音乐
     _getRecomMusicList() {
       recommend.getRecomMusicList().then(res => {
         this.musicList = res.slice(0, 6);
-        console.log(this.musicList);
+        // console.log(this.musicList);
       })
+    },
+    _artistFormatter(artists) {
+      return artists.map(art => art.name).join(' / ');
+    },
+    _artistObjFormatter(artists) {
+      return artists.map(art => ({id: art.id, name: art.name}));
     },
     // 首次获取轮播图片时，重新让better-scroll重新计算
     isFirstLoadImg() {
@@ -135,7 +147,14 @@ export default {
         this.$refs.scroll.refresh();
         this.hasLoaded = true;
       }
-    }
+    },
+    // 插入一条歌曲至播放列表顶端
+    simpliedInsertSong({id, name, artists}) {
+      // console.log(id, name, this._artistObjFormatter(artists));
+      artists = this._artistObjFormatter(artists);
+      this.insertSong({id, name, artists});
+    },
+    ...mapActions(['insertSong'])
   },
   components: {
     slider,
@@ -241,6 +260,10 @@ export default {
         }
         &.music-list {
         }
+      }
+      .loading-wrapper {
+        width: 60px;
+        margin: auto;
       }
     }
   }

@@ -1,7 +1,6 @@
 <!-- 分割线组件 -->
 <template>
-  <div class="cm-divider">
-
+  <div class="cm-divider" :style="{height: height + 'px'}">
   </div>
 </template>
 
@@ -19,6 +18,10 @@ export default {
     transparent: {
       type: Number,
       default: 1
+    },
+    height: {
+      type: Number,
+      default: 0.5
     }
   }
 }
@@ -26,7 +29,6 @@ export default {
 
 <style scoped>
   .cm-divider {
-    height: .5px;
     background-color: rgba(255, 255, 255, .1);
   }
 </style>

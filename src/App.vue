@@ -6,24 +6,6 @@
     <!-- <div class="mask"></div> -->
     <!-- 顶部 -->
     <app-header></app-header>
-
-    <!-- <header>
-      <div>用户信息按钮</div>
-      <div class="tab">
-        <div>
-          用户中心
-        </div>
-        <div>
-          音乐主页
-          <div class="tab">
-            <div>音乐推荐</div>
-            <div>电台推荐</div>
-          </div>
-        </div>
-      </div>
-      <div>搜索</div>
-    </header> -->
-
     <!-- 下方操作区域 -->
     <main class="app-content flex flex-column">
       <keep-alive> 
@@ -31,7 +13,7 @@
       </keep-alive>
     </main>
     <!-- 播放器 -->
-    <app-player v-show="t"></app-player>
+    <app-player></app-player>
   </div>
 </template>
 
@@ -42,7 +24,6 @@ export default {
   name: 'app',
   data () {
     return {
-      t: true
     }
   },
   components: {
