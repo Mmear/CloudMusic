@@ -14,7 +14,9 @@ import '@/assets/scss/reset.scss';
 // 图片懒加载
 import VueLazyload from 'vue-lazyload'
 Vue.use(VueLazyload, {
-  loading: require('@/assets/img/logo.png')
+  preload: 1,
+  loading: require('@/assets/img/logo.png'),
+  attempt: 1
 })
 
 new Vue({

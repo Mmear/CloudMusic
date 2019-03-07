@@ -51,7 +51,7 @@ export const domUtils = {
  * 时间戳转换
  * @param {number} time 传入秒时间
  */
-export const timeParser = time => {
+export const timeParser = (time) => {
   time = Math.floor(time);
   const min = Math.floor(time / 60)
     .toString()

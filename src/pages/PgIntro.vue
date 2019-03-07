@@ -50,7 +50,7 @@
           <div class="list-ctn flex" v-if="colList.length">
             <div v-for="(col, index) in colList" :key="index" class="list-item">
               <div class="img-wrapper">
-                <img :src="col.picUrl">
+                <img v-lazy="col.picUrl">
               </div>
               <span class="item-text">{{col.name}}</span>
             </div>
@@ -66,7 +66,7 @@
               :key="index" 
               class="list-item">
               <div class="img-wrapper">
-                <img :src="music.album.blurPicUrl">
+                <img v-lazy="music.album.blurPicUrl">
               </div>
               <span class="item-text">{{music.name}}</span>
               <span class="artist-text">{{_artistFormatter(music.artists)}}</span>

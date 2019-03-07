@@ -1,19 +1,21 @@
 import songApi from "@/api/composionQuery";
 // 检查是否有重复的歌曲，有则重新播放该歌曲并放至顶端
-const DEFAULT_IMG_URL = require('@/assets/img/logo.png');
+const DEFAULT_IMG_URL = require("@/assets/img/logo.png");
 const checkDuplicate = (id, songList) => {
   return songList.findIndex(item => {
     return item.id === id;
   });
 };
 export default {
+  // 更改播放状态
   changePlayerStatus({ commit }) {
     commit("changePlayerStatus");
   },
+  // 插入一条歌曲至播放列表顶部
   insertSong({ state, commit }, song) {
     // console.log("[Action:insertSong] " + JSON.stringify(song));
     commit("setFullScreen", true);
-    commit("setPlayingStatus", true);
+    // commit("setPlayingStatus", true);
     let suspIndex = checkDuplicate(song.id, state.playlist);
     let playlist = state.playlist.slice(0);
     if (suspIndex > -1) {
@@ -47,7 +49,7 @@ export default {
         songApi.getSongDetail(song.id)
       ]).then(resArr => {
         Object.assign(song, {
-          lyric: resArr[0],
+          allLyric: resArr[0],
           imgUrl: resArr[1].album.picUrl,
           album: resArr[1].album.id
         });
@@ -63,14 +65,36 @@ export default {
           playlist[index] = song;
         }
       });
-      // 最终提交，playlist中存在对song的闭包，异步操作完成后会自动更新
+      // 最终提交，存在对playlist的闭包，异步操作完成后会自动更新
       commit("setPlaylist", playlist);
     }
   },
   setFullScreen({ commit }, val) {
     commit("setFullScreen", val);
   },
+  // 设置播放状态
   setPlayingStatus({ commit }, val) {
     commit("setPlayingStatus", val);
+  },
+  // 从播放列表中移除指定序号的歌曲
+  removeSong({ state, commit }, {id, index}) {
+    const check = checkDuplicate(id, state.playlist);
+    if (check === -1) {
+      return;
+    } else if (index === state.currentIndex) {
+      commit('setPlayingStatus', false);
+    }
+    let playlist = state.playlist.slice(0);
+    let newIndex = state.currentIndex;
+    playlist.splice(index, 1);
+    newIndex = newIndex >= index ? newIndex - 1 : newIndex;
+    commit('setPlaylist', playlist);
+    commit('setCurrentIndex', newIndex);
+  },
+  // 移除所有歌曲
+  removeAllSongs({ commit }) {
+    const playlist = [];
+    commit("setCurrentIndex", -1);
+    commit("setPlaylist", playlist);
   }
 };

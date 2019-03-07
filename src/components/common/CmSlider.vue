@@ -64,7 +64,7 @@ export default {
         imgDom.style.width = `${sliderWidth}px`;
         width += sliderWidth;
       }
-      // 显示出循环的效果，如果是窗口调整导致的宽度计算则无需进行（因为已经初始化过了）
+      // 显示出循环的效果，如果是窗口调整导致的宽度计算则无需进行（因为已经图片初始化过了）
       if (this.loop && !isResize) {
         width += 2 * sliderWidth;
       }

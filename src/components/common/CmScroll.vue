@@ -52,7 +52,6 @@ export default {
       if (!this.$refs.wrapper) {
         return;
       }
-      console.log('Scroller begin initing.');
       this.scroll = new BScroll(this.$refs.wrapper, {
         probeType: this.probeType,
         click: this.click

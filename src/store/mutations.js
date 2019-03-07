@@ -9,13 +9,28 @@ export default {
   setPlayingStatus(state, val) {
     state.playing = val;
   },
+  setMode(state, val) {
+    state.mode = val;
+  },
   setPlaylist(state, val) {
     state.playlist = val;
+  },
+  setCurrentSongByIndex(state, val) {
+    if (val !== state.currentIndex) return;
+    state.currentSong = state.playlist[val];
   },
   setCurrentSong(state, val) {
     state.currentSong = Object.assign({}, state.currentSong, val);
   },
   setCurrentIndex(state, val) {
+    const noop = {
+      id: "",
+      name: "",
+      artists: []
+    };
+    if (val === -1) {
+      state.currentSong = noop;
+    }
     state.currentIndex = val;
   },
   // 插入一首歌曲至当前播放列表顶部

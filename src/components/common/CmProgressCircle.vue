@@ -33,7 +33,7 @@ export default {
   },
   computed: {
     getDashoffset () {
-      return (1 - this.percent) * this.dasharray;
+      return (100 - this.percent / 100) * this.dasharray;
     }
   }
   
@@ -47,20 +47,24 @@ export default {
     display: block; // svg为行内元素，会产生幽灵节点撑高盒子
   }
   circle {
-    stroke-width: 8px;
+    stroke-width: 7px;
     transform-origin: center; // 设置变换中心
     &.circle-background {
       transform: scale(.9);
-      stroke: $color-text-light;
+      stroke: $color-theme-t;
     }
     &.circle-rod {
       transform: scale(.9) rotate(-90deg);
-      stroke: $color-theme;
+      stroke: #f1f1f1;
     }
   }
   .circle-wrapper {
     position: absolute;
-    left: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
     top: 0;
     .iconfont {
       display: block;
