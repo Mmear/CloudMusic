@@ -22,7 +22,7 @@
               :class="{'icon-play': !playing, 'icon-pause': playing}"
             ></i>
           </pro-circle>
-          <div class="playlist-switch">
+          <div class="playlist-switch" @click="togglePlaylistPane">
             <i class="iconfont icon-music-list"></i>
           </div>
         </div>
@@ -94,15 +94,20 @@
               @click="setPlayingStatus(!playing)"
             ></i>
             <i class="iconfont icon-next-song" @click="nextSong"></i>
-            <i class="iconfont icon-music-list"></i>
+            <i class="iconfont icon-music-list" @click="togglePlaylistPane"></i>
           </div>
         </footer>
       </div>
     </transition>
     <!-- 播放列表 -->
-    <playlist v-show="showPlaylist" @cleanout="init">
+    <playlist v-show="showPlaylist" @cleanout="init" @close="hidePlaylistPane">
       <div class="playlist-wrapper">
-        <div class="playlist-item flex" v-for="(item, index) in playlist" :key="index">
+        <div 
+          class="playlist-item flex" 
+          v-for="(item, index) in playlist" 
+          :key="index"
+          @click="setCurrentIndex(index)"
+          >
           <div class="item-content flex">
             <span class="item-name">
               <span v-show="currentIndex === index">
@@ -114,7 +119,7 @@
               >{{artistFormatter(item.artists)}}</span>
             </span>
             <!-- 删除歌曲 -->
-            <span class="delete-item" @click="removeSong({id: item.id, index})">
+            <span class="delete-item" @click.stop="deleteSong({id: item.id, index})">
               <i class="iconfont icon-close"></i>
             </span>
           </div>
@@ -221,6 +226,13 @@ export default {
         this.nextSong();
       }
     },
+    // 删除歌曲
+    deleteSong(payload) {
+      if (this.playlist.length === 1) {
+        this.togglePlaylistPane();
+      }
+      this.removeSong(payload);
+    },
     // 进度条拖动
     percentChange(newPercent) {
       const actualTime = this.duration * newPercent;
@@ -286,7 +298,6 @@ export default {
         return;
       }
       if (this.playlist.length === 1) {
-        console.log("next!");
         this.loopThis();
       } else {
         let index = this.currentIndex;
@@ -326,12 +337,18 @@ export default {
           : PLAY_MODE.LOOP;
       this.setMode(result);
     },
-    // 收起面板
+    // 收起播放器面板
     hidePlayer() {
       this.changePlayerStatus();
     },
     // 开关歌曲列表面板
-    togglePlaylistPane() {},
+    togglePlaylistPane() {
+      this.showPlaylist = !this.showPlaylist;
+    },
+    // 收起播放列表面板
+    hidePlaylistPane() {
+      this.showPlaylist = false;
+    },
     // 收藏歌曲
     toggleLike(val, id) {
       // val ? this._addFavourite(id) : this._deleteFavourite(id);
@@ -358,6 +375,7 @@ export default {
   watch: {
     // 改变Index触发currentSong的变化，注意删除播放列表导致的index扰动
     currentIndex(newVal, oldVal) {
+      // console.log('currentIndex', newVal, oldVal);
       if (
         newVal === -1 ||
         newVal === oldVal ||
@@ -393,7 +411,6 @@ export default {
       //! audio.canplay()会调用setPlayingStatus(true); 但此时this.lyric可能还没初始化 也可能已经初始化，因为url与lyric的获取是各自异步的
       //! 不想这么麻烦可以去action中将url与lyric获取绑定在一起获取
       const audio = this.$refs.audio;
-      console.log("Playing detection", newVal, this.lyric.state);
       if (this.lyric instanceof Lyric) {
         // 检测是否已经初始化lyric
         if ((!newVal && this.lyric.state) || (newVal && !this.lyric.state)) {

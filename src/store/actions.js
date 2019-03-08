@@ -79,16 +79,37 @@ export default {
   // 从播放列表中移除指定序号的歌曲
   removeSong({ state, commit }, {id, index}) {
     const check = checkDuplicate(id, state.playlist);
+    const currentIndex = state.currentIndex;
     if (check === -1) {
       return;
-    } else if (index === state.currentIndex) {
+    }
+    if (index === currentIndex) { 
+      // 如果移除的是当前播放中的歌曲，先暂停，选取播放列表第二首播放
       commit('setPlayingStatus', false);
     }
     let playlist = state.playlist.slice(0);
-    let newIndex = state.currentIndex;
+    let newIndex = currentIndex;
     playlist.splice(index, 1);
-    newIndex = newIndex >= index ? newIndex - 1 : newIndex;
     commit('setPlaylist', playlist);
+    // 如果当前newIndex > index，则后退一位，否则不变
+    newIndex = newIndex > index ? newIndex - 1 : newIndex;
+    // 如果删除的是第一个歌曲 || 删除后index = 0
+    if (newIndex === 0) {
+      if (index === 1) {
+        return;
+      }
+      // 如果正在播放
+      if (currentIndex === 0) {
+        // 如果播放列表有剩余
+        if (playlist.length > 0) {
+          commit('setCurrentSongByIndex', newIndex);
+        } else {
+          commit('setCurrentIndex', -1);
+        }
+      } else { // 没在播放
+        // do something
+      }
+    } 
     commit('setCurrentIndex', newIndex);
   },
   // 移除所有歌曲

@@ -1,11 +1,11 @@
 <!-- 播放列表组件 -->
 <template>
   <transition name="playlist">
-    <div class="cp-playlist flex flex-column">
+    <div class="cp-playlist flex flex-column" @click="$emit('close')">
       <div class="content-container flex flex-column">
         <!-- 头部操作区域 -->
         <header class="list-header">
-          <span class="icon-wrapper" @click="changeMode">
+          <span class="icon-wrapper" @click.stop="changeMode">
             <i class="iconfont" :class="modeIcon"></i>
             <span>{{modeText}} ({{playlist.length}})</span>
           </span>
@@ -13,7 +13,7 @@
             <i class="iconfont icon-favorite"></i>
             收藏全部
           </span>
-          <span class="icon-wrapper" @click="emptyPlaylist">
+          <span class="icon-wrapper" @click.stop="emptyPlaylist">
             <i class="iconfont icon-delete"></i>
           </span>
         </header>
@@ -59,8 +59,8 @@ export default {
     },
     emptyPlaylist() {
       this.$emit('cleanout');
-      this.setPlayingStatus(false);
       this.removeAllSongs();
+      this.$emit('close');
     },
     ...mapActions(['removeAllSongs']),
     ...mapMutations(['setMode', 'setPlayingStatus',])

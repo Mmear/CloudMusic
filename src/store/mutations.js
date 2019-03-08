@@ -1,3 +1,13 @@
+const _init =  (state) => {
+  const noop = {
+    id: "",
+    name: "",
+    artists: []
+  };
+  state.currentSong = noop;
+  state.expandPlayer = false;
+  state.playing = false;
+}
 export default {
   changePlayerStatus(state) {
     // 更改normal播放器的状态（展开，收起）
@@ -29,7 +39,7 @@ export default {
       artists: []
     };
     if (val === -1) {
-      state.currentSong = noop;
+      _init(state);
     }
     state.currentIndex = val;
   },

@@ -59,7 +59,6 @@ export default {
       this._percentChange();
     },
     ballStart(e) {
-      console.log("touch start");
       this.touch.init = true;
       this.touch.startX = e.touches[0].pageX; // e.touch 返回一个触碰列表
       this.touch.left = this.$refs.barRod.clientWidth;
@@ -86,15 +85,14 @@ export default {
       }, 34); // 浏览器的一次渲染时间约为17ms
     },
     _move(offset) {
-      console.log("moving..", offset);
       // 检查左右边界
-      const boundryRight = this.$refs.bar.clientLeft + this.$refs.bar.clientWidth;
-      const boundryLeft = this.$refs.bar.clientLeft;
+      const boundaryRight = this.$refs.bar.clientLeft + this.$refs.bar.clientWidth;
+      const boundaryLeft = this.$refs.bar.clientLeft;
       offset =
-        offset > boundryRight
-          ? boundryRight
-          : offset < boundryLeft
-          ? boundryLeft
+        offset > boundaryRight
+          ? boundaryRight
+          : offset < boundaryLeft
+          ? boundaryLeft
           : offset;
       this.$refs.barBall.style["tranform"] = `translateX(${offset}px)`;
       this.$refs.barBall.style["webkitTransform"] = `translateX(${offset}px)`;
