@@ -1,4 +1,4 @@
-  const _init =  (state) => {
+const _init =  (state) => {
   const noop = {
     id: "",
     name: "",
@@ -30,13 +30,13 @@ export default {
     state.currentSong = state.playlist[val];
   },
   setCurrentSong(state, val) {
-    state.currentSong = Object.assign({}, state.currentSong, val);
+    state.currentSong = val;
   },
   setCurrentIndex(state, val) {
     const noop = {
       id: "",
       name: "",
-      artists: []
+      artists: [],
     };
     if (val === -1) {
       _init(state);

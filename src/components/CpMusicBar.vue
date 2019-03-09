@@ -6,7 +6,10 @@
       <div class="mini-player flex justify-between" v-show="!expandPlayer">
         <div class="left-part flex" @click="changePlayerStatus">
           <div class="cover-wrapper">
-            <img :class="{paused: !playing, playing: playing}" :src="currentSong.imgUrl">
+            <img
+              :class="{paused: !playing, playing: playing}"
+              :src="currentSong.album && currentSong.album.picUrl"
+            >
           </div>
           <div class="song-info flex flex-column justify-center">
             <p class="song-name">{{currentSong.name}}</p>
@@ -32,7 +35,10 @@
     <transition name="normal">
       <div class="normal-player flex flex-column" v-show="expandPlayer">
         <div class="player-background">
-          <img :src="currentSong.imgUrl" alt="background image">
+          <img 
+            v-lazy="currentSong.album && currentSong.album.picUrl"
+            :key="currentSong.album && currentSong.album.picUrl"
+            alt="background image">
         </div>
         <header class="top-area flex">
           <!-- 返回按钮 -->
@@ -45,12 +51,16 @@
           </div>
         </header>
         <divider :height="2"></divider>
-        <main class="main-area flex flex-center" @touchend="inLyricPage = !inLyricPage">
+        <main class="main-area flex flex-center" 
+        @touchstart.prevent="slideStart"
+        @touchmove.prevent="slideMove"
+        @touchend="slideEnd">
           <!-- 封面页 -->
           <transition name="fade">
             <div class="song-cover-wrapper" v-show="!inLyricPage">
               <img
-                :src="currentSong.imgUrl"
+                v-lazy="currentSong.album && currentSong.album.picUrl"
+                :key="currentSong.album && currentSong.album.picUrl"
                 :class="{paused: !playing, playing: playing}"
                 class="song-cover"
               >
@@ -69,6 +79,10 @@
               </div>
             </lyric-scroll>
           </transition>
+          <div class="dots flex">
+            <div class="dot" :class="{active: !inLyricPage}"></div>
+            <div class="dot" :class="{active: inLyricPage}"></div>
+          </div>
         </main>
         <footer class="bottom-area flex flex-column">
           <!-- 收藏，歌曲信息面板等按钮 -->
@@ -100,12 +114,7 @@
       </div>
     </transition>
     <!-- 播放列表 -->
-    <playlist 
-      v-show="showPlaylist" 
-      @cleanout="init" 
-      @delete="deleteSong"
-      @close="hidePlaylistPane">
-    </playlist>
+    <playlist v-show="showPlaylist" @cleanout="init" @delete="deleteSong" @close="hidePlaylistPane"></playlist>
     <!-- 播放器 -->
     <audio
       @canplay="audioCanplay"
@@ -115,7 +124,6 @@
       :src="currentSong.url"
       ref="audio"
     >不支持audio标签</audio>
-
   </div>
 </template>
 
@@ -146,7 +154,10 @@ export default {
       // 是否为歌词页
       inLyricPage: false,
       // 播放列表是否展开
-      showPlaylist: false
+      showPlaylist: false,
+      touch: {
+        init: false,
+      }
     };
   },
   computed: {
@@ -248,7 +259,7 @@ export default {
       lyricCtrl.stop();
     },
     // 获取歌词
-    _getLyric(newVal) {
+    _initLyric(newVal) {
       //! 此时audio可能并未加载完毕，所以currentTime并不准确
       // 歌词更新时进行的dom操作
       let lastEle = null;
@@ -268,9 +279,6 @@ export default {
     },
     // 切换下一首
     nextSong() {
-      if (!this.canplay) {
-        return;
-      }
       if (this.playlist.length === 1) {
         this.loopThis();
       } else {
@@ -323,24 +331,81 @@ export default {
     hidePlaylistPane() {
       this.showPlaylist = false;
     },
-    // 收藏歌曲
-    toggleLike(val, id) {
-      // val ? this._addFavourite(id) : this._deleteFavourite(id);
-    },
-    //! 添加歌曲至收藏目录 / 登录
-    _addLike(id) {},
-    // 取消收藏
-    _deleteLike(id) {},
-    // 查看是否歌曲被收藏
-    _isLiked(id) {},
     // 将artists对象转换为字符串
     artistFormatter(artists) {
       return artists.map(art => art.name).join(" / ");
+    },
+    // 获取歌曲信息
+    _fetchData(song) {
+      songApi.getSongUrl(song.id).then(res => {
+        song.url = res;
+      });
+      Promise.all([
+        songApi.getLyric(song.id),
+        songApi.getSongDetail(song.id)
+      ]).then(resArr => {
+        Object.assign(song, {
+          allLyric: resArr[0],
+          album: resArr[1].album
+        });
+        this._initLyric(song.allLyric, 0);
+        // // 避免加载时切歌的情况
+        // if (state.currentIndex === 0) {
+        //   // 未切歌
+        //   playlist[0] = song;
+        //   commit("setCurrentSong", song);
+        // } else {
+        //   // 切歌后，获取此歌曲位置
+        //   playlist = state.playlist.slice(0);
+        //   const index = checkDuplicate(playlist, song.id);
+        //   playlist[index] = song;
+        // }
+      });
+    },
+    // 触摸事件
+    slideStart(e) {
+      this.touch.init = true;
+      this.touch.startX = e.touches[0].pageX;
+      this.touch.startY = e.touches[0].pageY;
+    },
+    slideMove(e) {
+      if (!this.touch.init) {
+        return;
+      }
+      let deltaX = e.touches[0].pageX - this.touch.startX;
+      let deltaY = e.touches[0].pageY - this.touch.startY;
+      if (Math.abs(deltaX) < Math.abs(deltaY)) {
+         return;
+      }
+      let left = this.inLyricPage ? -window.innerWidth : 0;
+      // 左滑的距离
+      let offsetWidth = Math.min(0, Math.max(-window.innerWidth, left + deltaX));
+      this.touch.percent = Math.abs(offsetWidth / window.innerWidth);
+    },
+    slideEnd(e) {
+      let offsetWidth = null;
+      if (!this.inLyricPage) {
+        // 左滑
+        if (this.touch.percent > 0.1) {
+          offsetWidth = - window.innerWidth;
+          this.inLyricPage = true;
+        } else {
+          offsetWidth = 0;
+        }
+      } else {
+        if (this.touch.percent < 0.9) {
+          offsetWidth = 0;
+          this.inLyricPage = false;
+        } else {
+          offsetWidth = -window.innerWidth;
+        }
+      }
     },
     ...mapActions(["removeSong"]),
     ...mapMutations([
       "changePlayerStatus",
       "setPlayingStatus",
+      "setCurrentSong",
       "setCurrentIndex",
       "setCurrentSongByIndex",
       "setMode"
@@ -349,12 +414,8 @@ export default {
   watch: {
     // 改变Index触发currentSong的变化，注意删除播放列表导致的index扰动
     currentIndex(newVal, oldVal) {
-      console.log('currentIndex', newVal, oldVal);
-      if (
-        newVal === -1 ||
-        newVal === oldVal ||
-        this.currentSong.id === this.playlist[newVal].id
-      ) {
+      // console.log("currentIndex", newVal, oldVal);
+      if (newVal < 0 || newVal > this.playlist.length - 1) {
         return;
       }
       if (oldVal !== -1) {
@@ -362,8 +423,8 @@ export default {
         if (this.lyric instanceof Lyric) {
           this._stopLyricScrolling();
         }
-        this.setCurrentSongByIndex(newVal);
       }
+      this.setCurrentSong(this.playlist[newVal]);
     },
     // 检测currentSong的变化
     currentSong(newVal, oldVal) {
@@ -375,10 +436,11 @@ export default {
       if (this.lyric instanceof Lyric) {
         this._stopLyricScrolling();
       }
-      // 进行歌词初始化
-      if (newVal.allLyric !== oldVal.allLyric) {
-        this._getLyric(newVal.allLyric, 0);
+      // 获取歌曲详细信息
+      if (newVal.url && newVal.album && newVal.lyric) {
+        return;
       }
+      this._fetchData(newVal);
     },
     // 切换播放与暂停状态
     playing(newVal, oldVal) {
@@ -511,6 +573,7 @@ export default {
     }
     .main-area {
       flex-grow: 1;
+      flex-direction: column;
       position: relative;
       .song-cover-wrapper {
         width: 70%;
@@ -562,6 +625,24 @@ export default {
           opacity: 0;
         }
       }
+      .dots {
+        position: absolute;
+        width: 60px;
+        margin: 0 auto;
+        bottom: 20px;
+        justify-content: center;
+        .dot {
+          width: 10px;
+          height: 10px;
+          margin: 0 5px;
+          border-radius: 50%;
+          background-color: $color-text-t-3;
+          &.active {
+            width: 20px;
+            border-radius: 5px;
+          }
+        }
+      }
     }
     .bottom-area {
       padding-top: 8px;
@@ -597,20 +678,20 @@ export default {
     }
     &.normal-enter-active,
     &.normal-leave-active {
-      transition: all 0.4s;
+      transition: all 0.3s;
       .top-area,
       .bottom-area {
-        transition: all 0.4s cubic-bezier(0.86, 0.18, 0.82, 1.32);
+        transition: all 0.6s cubic-bezier(0.86, 0.18, 0.82, 1.32);
       }
     }
     &.normal-enter,
     &.normal-leave-to {
       transform: translateX(-100%) translateY(100%) scale(0);
+      // opacity: 0;
       .bottom-area {
         transform: translateY(100%);
       }
     }
   }
-
 }
 </style>

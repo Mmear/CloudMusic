@@ -183,7 +183,7 @@ export default {
     padding: 0 5px;
     position: absolute;
     box-sizing: border-box;
-    overflow: hidden;
+    // overflow: hidden;
     .content-wrapper {
       background-color: $color-bg-d;
       .banner-wrapper {

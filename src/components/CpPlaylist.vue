@@ -30,7 +30,7 @@
                 >
                 <div class="item-content flex">
                   <span class="item-name">
-                    <span v-show="currentIndex === index">
+                    <span v-show="currentIndex === index" style="font-size: 16px;">
                       <i class="iconfont icon-note"></i>
                     </span>
                     {{item.name}} -
@@ -183,6 +183,8 @@ export default {
         overflow: hidden;
         .playlist-wrapper {
           .playlist-item {
+            width: 100%;
+            position: relative;
             flex-wrap: wrap;
             .item-content {
               flex-grow: 1;
@@ -194,12 +196,18 @@ export default {
                 width: 80%;
                 @include no-wrap();
                 .item-artists {
+                  display: inline-block;
+                  @include no-wrap();
                   padding: 0 2px;
                   font-size: $font-size-s;
                   color: $color-text-t-1;
                 }
               }
               .delete-item {
+                position: absolute;
+                right: 0;
+                height: 10px;
+                margin: auto 0;
               }
             }
             .divider {

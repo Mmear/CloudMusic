@@ -7,8 +7,8 @@
         <i class="iconfont icon-back"></i>
       </div>
       <div class="brief-info">
-        <p class="col-name">歌单</p>
-        <p class="brief-desc">{{colDetail.desc}}</p>
+        <p class="col-name">歌单：{{col.name}}</p>
+        <p class="brief-desc">by {{colDetail.creator.name}}</p>
       </div>
     </nav>
     <!-- 滚动区域 -->
@@ -42,7 +42,7 @@
               <i class="iconfont icon-download"></i>
               <span>下载</span>
             </span>
-            <span class="icon-wrapper">
+            <span class="icon-wrapper" @click.stop="showInfo = true">
               <i class="iconfont icon-information"></i>
               <span>信息</span>
             </span>
@@ -82,11 +82,39 @@
         </main>
       </div>
     </scroll-pane>
-    <!-- <button style="position: absolute; left: 0; bottom: 400px;" @click="$router.back()">return</button> -->
     <!-- 当播放器出现时，让其出现撑高scrollPane -->
     <div class="padding-div" v-show="playlist.length > 0"></div>
     <!-- 返回顶端 -->
     <div class="toTop"></div>
+    <!-- 歌单详情面板 -->
+    <transition name="info">
+      <div class="col-info-pane flex flex-column" v-show="showInfo">
+        <div class="background">
+          <img class="bg-img" :src="col.picUrl" alt="">
+        </div>
+        <span class="icon-wrapper" @click="showInfo = false">
+          <i class="iconfont icon-close"></i>
+        </span>
+        <div class="cover-wrapper">
+          <img class="cover" :src="col.picUrl" alt>
+        </div>
+        <p class="col-name">
+          {{col.name}}
+        </p>
+        <div class="tags">
+          <span class="tag" v-for="(tag, index) in colDetail.tags" :key="index">
+            {{tag}}
+          </span>
+        </div>
+        <scroll-pane class="col-desc-wrapper">
+          <div class="p-wrapper">
+            <p class="col-desc" v-for="(p, index) in descFormatter(this.colDetail.desc)" :key="index">
+              {{p}}
+            </p>
+          </div>
+        </scroll-pane>
+      </div>
+    </transition>
   </div>
 </template>
 
@@ -100,8 +128,10 @@ export default {
     return {
       colDetail: {
         creator: {},
-        tracks: []
+        tracks: [],
+        desc: '',
       },
+      showInfo: false, //
       hasAdded: false // 歌单是否已经被添加至播放列表中
     };
   },
@@ -118,8 +148,14 @@ export default {
       next();
     });
   },
-  mounted() {},
+  mounted() {
+    this.$nextTick(() => this.descFormatter(this.colDetail.desc));
+  },
   methods: {
+    descFormatter(paragraph) {
+      const pArr = paragraph.split('\n');
+      return pArr;
+    },
     _getColList(id) {
       getColListDetail(id).then(res => (this.colDetail = res));
     },
@@ -290,6 +326,79 @@ $fixed-header: 50px;
           }
         }
       }
+    }
+  }
+  .col-info-pane {
+    position: fixed;
+    height: 100%;
+    padding: 0 10px;
+    background-color: $color-bg;
+    font-size: $font-size-m;
+    color: $color-text-t-1;
+    .background {
+      position: absolute;
+      height: 100%;
+      width: 100%;
+      filter: blur(30px);
+      opacity: .3;
+      z-index: -1;
+      .bg-img {
+        height: 100%;
+        width: 100%;
+      }
+    }
+    .icon-wrapper {
+      height: 40px;
+      line-height: 40px;
+      text-align: right;
+      .iconfont {
+
+      }
+    }
+    .cover-wrapper {
+      text-align: center;
+      .cover {
+        width: 45%;
+      }
+    }
+    .col-name {
+      padding: 10px 0;
+      text-align: center;
+      font-size: $font-size-l;
+      font-weight: bold;
+    }
+    .tags {
+      padding: 15px 0;
+      .tag {
+        display: inline-block;
+        line-height: 15px;
+        padding: 3px 5px;
+        margin: 0 3px;
+        color: $color-text-t-2;
+        border: 1px solid $color-text-t-2;
+        border-radius: 5px;
+      }
+    }
+    .col-desc-wrapper {
+      padding: 5px 0;
+      flex-grow: 1;
+      position: relative;
+      overflow: hidden;
+      .p-wrapper {
+        position: absolute;
+        height: 100%;
+        width: 100%;
+        .col-desc {
+          padding: 5px 0;
+          line-height: 1.5;
+        }
+      }
+    }
+    &.info-enter-active, &.info-leave-active {
+      transition: opacity .3s ease; 
+    }
+    &.info-enter, &.info-leave-to {
+      opacity: 0;
     }
   }
   .padding-div {
