@@ -48,12 +48,16 @@
         <section class="list-wrapper col-list">
           <span class="list-title">推荐歌单</span>
           <div class="list-ctn flex" v-if="colList.length">
-            <div v-for="(col, index) in colList" :key="index" class="list-item">
+            <router-link 
+              v-for="(col, index) in colList" 
+              :key="index" 
+              :to="{name: 'colList', params: {col}}"
+              class="list-item">
               <div class="img-wrapper">
                 <img v-lazy="col.picUrl">
               </div>
               <span class="item-text">{{col.name}}</span>
-            </div>
+            </router-link>
           </div>
         </section>
         <!-- 最新音乐 -->
@@ -79,6 +83,10 @@
         </div>
       </div>
     </scroll-pane>
+    <!-- 歌单路由 -->
+    <transition name="slide">
+      <router-view></router-view>
+    </transition>
   </div>
 </template>
 
@@ -107,8 +115,7 @@ export default {
   mounted() {
     this.$refs.scroll.refresh();
   },
-  methods: {
-    
+  methods: {   
     // 获取轮播图数据
     _getBanners() {
       recommend.getBanners()
@@ -266,6 +273,12 @@ export default {
         margin: auto;
       }
     }
+  }
+  .slide-enter-active, .slide-leave-active {
+    transition: .3s all ease;
+  }
+  .slide-enter, .slide-leave-to {
+    transform: translateX(100%);
   }
 }
 </style>

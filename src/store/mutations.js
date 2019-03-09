@@ -1,4 +1,4 @@
-const _init =  (state) => {
+  const _init =  (state) => {
   const noop = {
     id: "",
     name: "",

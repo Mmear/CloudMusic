@@ -100,34 +100,11 @@
       </div>
     </transition>
     <!-- 播放列表 -->
-    <playlist v-show="showPlaylist" @cleanout="init" @close="hidePlaylistPane">
-      <div class="playlist-wrapper">
-        <div 
-          class="playlist-item flex" 
-          v-for="(item, index) in playlist" 
-          :key="index"
-          @click="setCurrentIndex(index)"
-          >
-          <div class="item-content flex">
-            <span class="item-name">
-              <span v-show="currentIndex === index">
-                <i class="iconfont icon-note"></i>
-              </span>
-              {{item.name}} -
-              <span
-                class="item-artists"
-              >{{artistFormatter(item.artists)}}</span>
-            </span>
-            <!-- 删除歌曲 -->
-            <span class="delete-item" @click.stop="deleteSong({id: item.id, index})">
-              <i class="iconfont icon-close"></i>
-            </span>
-          </div>
-          <div class="divider">
-            <divider :height="2"></divider>
-          </div>
-        </div>
-      </div>
+    <playlist 
+      v-show="showPlaylist" 
+      @cleanout="init" 
+      @delete="deleteSong"
+      @close="hidePlaylistPane">
     </playlist>
     <!-- 播放器 -->
     <audio
@@ -138,10 +115,7 @@
       :src="currentSong.url"
       ref="audio"
     >不支持audio标签</audio>
-    <button
-      style="position: absolute; top: 120px; left: 0px; z-index: 100"
-      @click="showPlaylist = !showPlaylist"
-    >test button</button>
+
   </div>
 </template>
 
@@ -375,7 +349,7 @@ export default {
   watch: {
     // 改变Index触发currentSong的变化，注意删除播放列表导致的index扰动
     currentIndex(newVal, oldVal) {
-      // console.log('currentIndex', newVal, oldVal);
+      console.log('currentIndex', newVal, oldVal);
       if (
         newVal === -1 ||
         newVal === oldVal ||
@@ -441,6 +415,7 @@ export default {
   }
 }
 .cp-musicbar {
+  z-index: 3;
   .mini-player {
     height: 40px;
     background-color: #2f343b;
@@ -636,31 +611,6 @@ export default {
       }
     }
   }
-  .playlist-wrapper {
-    .playlist-item {
-      flex-wrap: wrap;
-      .item-content {
-        flex-grow: 1;
-        padding: 10px 0;
-        justify-content: space-between;
-        .item-name {
-          padding: 0 2px;
-          display: inline-block;
-          width: 80%;
-          @include no-wrap();
-          .item-artists {
-            padding: 0 2px;
-            font-size: $font-size-s;
-            color: $color-text-t-1;
-          }
-        }
-        .delete-item {
-        }
-      }
-      .divider {
-        width: 100%;
-      }
-    }
-  }
+
 }
 </style>

@@ -22,7 +22,7 @@ export const getStatus = () => {
   return instance
     .get("/login/status")
     .then(res => {
-      return Promise.resolve(res.data); 
+      return Promise.resolve(res.data);
     })
     .catch(errHandler);
 };
@@ -48,7 +48,39 @@ export const getRecomMusicList = () => {
 };
 // 获取个性化推荐歌曲 需登录
 export const getPersonalMusicList = () => {};
-
+// 获取歌单详细信息
+export const getColListDetail = id => {
+  return instance
+    .get(`/playlist/detail?id=${id}`)
+    .then(res => {
+      const data = res.data.playlist;
+      const tracks = data.tracks.map(({ name, id, ar, al }) => {
+        return {
+          id,
+          name,
+          artists: ar,
+          album: { id: al.id, name: al.name, picUrl: al.picUrl }
+        };
+      });
+      return Promise.resolve({
+        id: data.id,
+        name: data.name,
+        tracks,
+        desc: data.description,
+        tags: data.tags,
+        creator: {
+          avatarUrl: data.creator.avatarUrl,
+          name: data.creator.nickname,
+          userId: data.creator.userId,
+        },
+        shareCount: data.shareCount,
+        commentCount: data.commentCount,
+        playCount: data.playCount,
+        subscribedCount: data.subscribedCount,
+      });
+    })
+    .catch(errHandler);
+};
 export const recommend = {
   getBanners,
   getRecomColList,

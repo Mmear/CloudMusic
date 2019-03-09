@@ -21,7 +21,33 @@
         <!-- 播放列表滚动区域 -->
         <div class="list-wrapper">
           <list-scroll class="list-pane">
-            <slot></slot>
+            <div class="playlist-wrapper">
+              <div 
+                class="playlist-item flex" 
+                v-for="(item, index) in playlist" 
+                :key="index"
+                @click.stop="setCurrentIndex(index)"
+                >
+                <div class="item-content flex">
+                  <span class="item-name">
+                    <span v-show="currentIndex === index">
+                      <i class="iconfont icon-note"></i>
+                    </span>
+                    {{item.name}} -
+                    <span
+                      class="item-artists"
+                    >{{artistFormatter(item.artists)}}</span>
+                  </span>
+                  <!-- 删除歌曲 -->
+                  <span class="delete-item" @click.stop="deleteSong({id: item.id, index})">
+                    <i class="iconfont icon-close"></i>
+                  </span>
+                </div>
+                <div class="divider">
+                  <divider :height="2"></divider>
+                </div>
+              </div>
+            </div>
           </list-scroll>
         </div>
       </div>
@@ -62,8 +88,14 @@ export default {
       this.removeAllSongs();
       this.$emit('close');
     },
+    deleteSong(payload) {
+      this.$emit('delete', payload);
+    },
+    artistFormatter(artists) {
+      return artists.map(art => art.name).join(" / ");
+    },
     ...mapActions(['removeAllSongs']),
-    ...mapMutations(['setMode', 'setPlayingStatus',])
+    ...mapMutations(['setMode', 'setPlayingStatus', "setCurrentIndex"])
   },
   computed: {
     modeText() {
@@ -94,7 +126,7 @@ export default {
       }
       return iconCls;
     },
-    ...mapState(["playlist", "mode"])
+    ...mapState(["playlist", "mode", "currentIndex"])
   }
 };
 </script>
@@ -127,7 +159,7 @@ export default {
   .content-container {
     height: 50%;
     padding: 0 5px;
-    background-color: $color-bg-2;
+    background-color: $color-theme;
     border-radius: 10px 10px 0 0;
     .list-header {
       padding: 15px 0;
@@ -149,6 +181,32 @@ export default {
         height: 100%;
         width: 100%;
         overflow: hidden;
+        .playlist-wrapper {
+          .playlist-item {
+            flex-wrap: wrap;
+            .item-content {
+              flex-grow: 1;
+              padding: 10px 0;
+              justify-content: space-between;
+              .item-name {
+                padding: 0 2px;
+                display: inline-block;
+                width: 80%;
+                @include no-wrap();
+                .item-artists {
+                  padding: 0 2px;
+                  font-size: $font-size-s;
+                  color: $color-text-t-1;
+                }
+              }
+              .delete-item {
+              }
+            }
+            .divider {
+              width: 100%;
+            }
+          }
+        }
       }
     }
   }

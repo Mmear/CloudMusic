@@ -27,6 +27,7 @@ export default {
   songCol: {
     id: "",
     name: "",
+    imgUrl: "",
     songList: []
   } // 当前歌单
   // searchHistory: [] // 搜索历史
