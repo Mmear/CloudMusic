@@ -158,13 +158,12 @@ export default {
   }
   .content-container {
     height: 50%;
-    padding: 0 5px;
     background-color: $color-theme;
     border-radius: 10px 10px 0 0;
     .list-header {
-      padding: 15px 0;
       display: grid;
       grid-template-columns: 8fr 3fr 1fr;
+      padding: 12px 5px;
       text-align: right;
       .icon-wrapper {
         color: $color-text-light;
@@ -176,10 +175,12 @@ export default {
     .list-wrapper {
       flex-grow: 1;
       position: relative;
+      background-color: $color-bg-d;
       .list-pane {
         position: absolute;
         height: 100%;
-        width: 100%;
+        width: calc(100% - 10px);
+        margin: 0 5px;
         overflow: hidden;
         .playlist-wrapper {
           .playlist-item {

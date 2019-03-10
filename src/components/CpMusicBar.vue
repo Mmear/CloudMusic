@@ -69,13 +69,16 @@
           <!-- 歌词页 -->
           <transition name="fade">
             <lyric-scroll class="lyric-wrapper" ref="lyricWrapper" v-show="inLyricPage">
-              <div class="lyric-pane" ref="lyricPane">
+              <div class="lyric-pane" ref="lyricPane"  v-show="lyric.lines.length > 0">
                 <p
                   v-for="(line, index) in lyric.lines"
                   :key="index"
                   :class="`lyric-${index}`"
                   class="lyric-item"
                 >{{line.txt}}</p>
+              </div>
+              <div v-show="lyric.lines.length == 0" style="height:30px; margin: 20px 0; text-align: center; font-size: 16px; color: #ccc;">
+                当前歌曲为纯音乐，请欣赏
               </div>
             </lyric-scroll>
           </transition>
@@ -250,6 +253,7 @@ export default {
     _beginLyricScrolling(currTime) {
       // 清除上一首歌曲歌词存在的样式
       [...this.$refs.lyricPane.children].forEach(element => {
+        if (!element) return;
         element.classList.remove("active");
       });
       this.lyric.seek(currTime);
@@ -262,6 +266,12 @@ export default {
     _initLyric(newVal) {
       //! 此时audio可能并未加载完毕，所以currentTime并不准确
       // 歌词更新时进行的dom操作
+      if (!newVal) {
+        this.lyric = {
+          lines: [],
+        }
+        return;
+      }
       let lastEle = null;
       const handler = currentLine => {
         currentLine = currentLine.lineNum;
@@ -275,7 +285,9 @@ export default {
         lastEle = nowEle;
       };
       this.lyric = new Lyric(newVal.lyric.lyric, handler); // api如此..
-      this._beginLyricScrolling(0);
+      if (this.playing) {
+        this._beginLyricScrolling(this.currentTime * 1000);
+      }
     },
     // 切换下一首
     nextSong() {
@@ -483,12 +495,15 @@ export default {
     background-color: #2f343b;
     padding: 5px;
     .left-part {
+      flex-basis: 80%;
+      overflow: hidden;
       .cover-wrapper {
         line-height: 0;
         width: 40px;
         img {
           border-radius: 50%;
-          width: 100%;
+          height: 100%;
+          margin: auto 0;
           animation: rotate 30s linear infinite;
           &.playing {
             animation-play-state: running;
@@ -500,12 +515,15 @@ export default {
       }
       .song-info {
         padding-left: 10px;
+        @include no-wrap;
         .song-name {
+          @include no-wrap;
           font-size: $font-size-m;
           color: $color-text-light;
           padding-bottom: 4px;
         }
         .artist {
+          @include no-wrap;
           font-size: $font-size-s;
           color: $color-text-t-2;
         }
@@ -513,6 +531,7 @@ export default {
     }
     .right-part {
       color: $color-text-light;
+      flex-basis: 20%;
       .cm-pro-cir {
         margin: 0 10px;
       }
@@ -576,12 +595,14 @@ export default {
       flex-direction: column;
       position: relative;
       .song-cover-wrapper {
-        width: 70%;
+        width: 70vw;
+        height: 70vw;
         margin: 0 auto;
         img {
           border: 10px solid $color-text-t-3;
           border-radius: 50%;
           width: 100%;
+          height: 100%;
           animation: rotate 30s linear infinite;
           &.playing {
             animation-play-state: running;

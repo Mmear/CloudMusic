@@ -31,7 +31,7 @@
           <!-- 歌单操作面板 -->
           <div class="header-bottom flex">
             <span class="icon-wrapper">
-              <i class="iconfont icon-category"></i>
+              <i class="iconfont icon-comments"></i>
               <span>{{colDetail.commentCount}}</span>
             </span>
             <span class="icon-wrapper">
@@ -123,9 +123,10 @@ import { mapState, mapActions } from "vuex";
 import scrollPane from "@/components/common/CmScroll";
 import { getColListDetail } from "@/api/recommendQuery";
 export default {
-  props: ["col"],
+  // props: ["col"],
   data() {
     return {
+      col: {},
       colDetail: {
         creator: {},
         tracks: [],
@@ -139,12 +140,13 @@ export default {
   // 也可在created中获取
   beforeRouteEnter(to, from, next) {
     getColListDetail(to.params.col.id).then(res => {
-      next(vm => (vm.colDetail = res));
+      next(vm => {vm.colDetail = res; vm.col = to.params.col;});
     });
   },
   beforeRouteUpdate(to, from, next) {
     getColListDetail(to.params.col.id).then(res => {
       this.colDetail = res;
+      this.col = to.params.col;
       next();
     });
   },
@@ -153,8 +155,10 @@ export default {
   },
   methods: {
     descFormatter(paragraph) {
-      const pArr = paragraph.split('\n');
-      return pArr;
+      if (paragraph) {
+        const pArr = paragraph.split('\n');
+        return pArr;
+      }
     },
     _getColList(id) {
       getColListDetail(id).then(res => (this.colDetail = res));
@@ -317,10 +321,12 @@ $fixed-header: 50px;
           .song-info {
             @include no-wrap;
             .song-name {
+              @include no-wrap;
               color: $color-text-t-1;
-              padding: 5px 0;
+              padding: 5px 2px;
             }
             .song-from {
+              @include no-wrap;
               font-size: $font-size-s;
             }
           }

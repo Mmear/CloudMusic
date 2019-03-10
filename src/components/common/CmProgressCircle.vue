@@ -51,7 +51,7 @@ export default {
     transform-origin: center; // 设置变换中心
     &.circle-background {
       transform: scale(.9);
-      stroke: $color-theme-t;
+      stroke: $color-theme;
     }
     &.circle-rod {
       transform: scale(.9) rotate(-90deg);
@@ -69,7 +69,8 @@ export default {
     .iconfont {
       display: block;
       font-size: 32px;
-      opacity: .5;
+      opacity: .3;
+      z-index: 0;
     }
   }
 }

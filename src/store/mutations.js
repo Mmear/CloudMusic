@@ -1,3 +1,5 @@
+import { STATUS_CODES } from "http";
+
 const _init =  (state) => {
   const noop = {
     id: "",
@@ -42,6 +44,12 @@ export default {
       _init(state);
     }
     state.currentIndex = val;
+  },
+  setUser(state, val) {
+    state.user = val;
+  },
+  setIdentified(state, val) {
+    state.identified = val;
   },
   // 插入一首歌曲至当前播放列表顶部
   addToPlaylist(state, song) {

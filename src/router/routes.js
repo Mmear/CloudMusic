@@ -7,6 +7,7 @@ const userZone = () => import("@/pages/PgUserZone");
 const indexRadio = () => import("@/pages/PgRadio");
 const indexMusic = () => import("@/pages/PgIntro");
 const colList = () => import("@/pages/PgColList");
+const login = () => import("@/pages/PgLogin");
 const routes = [
   {
     path: "/",
@@ -21,14 +22,14 @@ const routes = [
         name: "indexMusic",
         path: "music",
         component: indexMusic,
-        children: [
-          {
-            name: "colList",
-            path: "col/:col",
-            props: true,
-            component: colList
-          }
-        ]
+        // children: [
+        //   {
+        //     name: "colList",
+        //     path: "col/:col",
+        //     props: true,
+        //     component: colList
+        //   }
+        // ]
       },
       {
         name: "indexRadio",
@@ -40,7 +41,23 @@ const routes = [
   {
     path: "/userzone",
     name: "userZone",
-    component: userZone
+    component: userZone,
+  },
+  {
+    path: "/login",
+    name: "login",
+    components: {
+      // default: index,
+      loginView: login
+    }
+  },
+  {
+    path: "/col/:col",
+    name: "colList",
+    props: true,
+    components: {
+      colView: colList
+    }
   }
 ];
 export default routes;

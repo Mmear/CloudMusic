@@ -14,6 +14,12 @@
     </main>
     <!-- 播放器 -->
     <app-player></app-player>
+    <transition name="slide">
+      <router-view name="loginView"></router-view>
+    </transition>
+    <transition name="slide">
+      <router-view name="colView"></router-view>
+    </transition>
   </div>
 </template>
 
@@ -41,6 +47,12 @@ export default {
   flex-direction: column;
   .app-content {
     flex-grow: 1;
+  }
+  .slide-enter-active, .slide-leave-active {
+    transition: .3s all ease;
+  }
+  .slide-enter, .slide-leave-to {
+    transform: translateX(-100%);
   }
 }
 </style>

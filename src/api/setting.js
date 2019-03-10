@@ -5,7 +5,8 @@ import axios from "axios";
 //创建axios实例
 export const instance = axios.create({
   baseURL: "http://localhost:3000", //基础请求地址
-  timeout: 10 * 1000 //超时时间
+  timeout: 10 * 1000, //超时时间
+  withCredentials: true,
 });
 
 //添加请求拦截器

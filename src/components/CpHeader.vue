@@ -6,7 +6,7 @@
     </div>
     <div class="menu-tab"><menu-tab></menu-tab></div>
     <div class="toggle search flex align-center">
-      <span><i class="iconfont icon-diamond"></i></span>
+      <span><i class="iconfont icon-search"></i></span>
     </div>
   </div>
 </template>

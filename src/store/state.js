@@ -11,12 +11,7 @@ export default {
   mode: PLAY_MODE.LISTLOOP,
   playlist: [], // 用户播放列表 >0 播放器显示
   currentIndex: -1, // 当前播放索引
-  user: {
-    //! 用户信息 可能需要分出模块
-    userId: "",
-    nickName: "",
-    avatarUrl: ""
-  },
+  user: null,   //! 用户信息 可能需要分出模块
   identified: false, // 已登录
   currentSong: {
     //~ 当前激活歌曲
@@ -24,12 +19,6 @@ export default {
     name: "",
     artists: [] // 当前激活歌曲作者 {id:[string], name: [string], imgUrl: [string]}
   },
-  songCol: {
-    id: "",
-    name: "",
-    imgUrl: "",
-    songList: []
-  } // 当前歌单
   // searchHistory: [] // 搜索历史
 };
 export { PLAY_MODE };

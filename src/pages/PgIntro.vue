@@ -19,13 +19,13 @@
         <section class="nav-wrapper flex justify-around">
           <div class="nav-item flex flex-column">
             <span class="icon-ctn">
-              <i class="iconfont icon-diamond"></i>
+              <i class="iconfont icon-emotion"></i>
             </span>
             <span class="nav-text">私人fm</span>
           </div>
           <div class="nav-item flex flex-column">
             <span class="icon-ctn">
-              <i class="iconfont icon-diamond"></i>
+              <i class="iconfont icon-weather"></i>
             </span>
             <span class="nav-text">每日推荐</span>
           </div>
@@ -37,7 +37,7 @@
           </div>
           <div class="nav-item flex flex-column">
             <span class="icon-ctn">
-              <i class="iconfont icon-diamond"></i>
+              <i class="iconfont icon-rank"></i>
             </span>
             <span class="nav-text">排行榜</span>
           </div>
@@ -176,14 +176,13 @@ export default {
 .pg-intro {
   flex-grow: 1;
   position: relative;
-  overflow: hidden;
   .intro-content {
     height: 100%;
     width: 100%;
     padding: 0 5px;
     position: absolute;
     box-sizing: border-box;
-    // overflow: hidden;
+    overflow: hidden;
     .content-wrapper {
       background-color: $color-bg-d;
       .banner-wrapper {
@@ -219,7 +218,7 @@ export default {
             background-color: $color-theme;
             .iconfont {
               font-size: 1.3rem;
-              color: $color-text-t-2;
+              color: $color-text-t-1;
             }
           }
           .nav-text {
@@ -235,7 +234,7 @@ export default {
           padding: 10px 0;
           color: $color-text-light;
           font-weight: bold;
-          font-size: $font-size-m;
+          font-size: 16px;
         }
         .list-ctn {
           flex-wrap: wrap;
