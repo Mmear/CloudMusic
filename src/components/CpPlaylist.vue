@@ -23,10 +23,11 @@
           <list-scroll class="list-pane">
             <div class="playlist-wrapper">
               <div 
-                class="playlist-item flex" 
                 v-for="(item, index) in playlist" 
                 :key="index"
                 @click.stop="setCurrentIndex(index)"
+                class="playlist-item flex" 
+                :class="{active: currentIndex === index}"
                 >
                 <div class="item-content flex">
                   <span class="item-name">
@@ -187,6 +188,10 @@ export default {
             width: 100%;
             position: relative;
             flex-wrap: wrap;
+            color: $color-text-t-2;
+            &.active {
+              color: $color-text-light;
+            }
             .item-content {
               flex-grow: 1;
               padding: 10px 0;
@@ -201,7 +206,6 @@ export default {
                   @include no-wrap();
                   padding: 0 2px;
                   font-size: $font-size-s;
-                  color: $color-text-t-1;
                 }
               }
               .delete-item {

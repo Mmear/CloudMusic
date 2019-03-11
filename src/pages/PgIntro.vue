@@ -273,11 +273,5 @@ export default {
       }
     }
   }
-  .slide-enter-active, .slide-leave-active {
-    transition: .3s all ease;
-  }
-  .slide-enter, .slide-leave-to {
-    transform: translateX(100%);
-  }
 }
 </style>

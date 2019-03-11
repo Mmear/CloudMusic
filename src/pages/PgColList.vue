@@ -18,7 +18,7 @@
         <header class="col-info-header">
           <div class="header-top">
             <div class="cover-wrapper">
-              <img class="cover" v-lazy="col.picUrl" alt>
+              <img class="cover" :src="col.picUrl || colDetail.coverImgUrl" alt>
             </div>
             <div class="info-wrapper">
               <p class="col-name">{{col.name}}</p>
@@ -90,13 +90,13 @@
     <transition name="info">
       <div class="col-info-pane flex flex-column" v-show="showInfo">
         <div class="background">
-          <img class="bg-img" :src="col.picUrl" alt="">
+          <img class="bg-img" :src="col.picUrl || colDetail.coverImgUrl" alt="">
         </div>
         <span class="icon-wrapper" @click="showInfo = false">
           <i class="iconfont icon-close"></i>
         </span>
         <div class="cover-wrapper">
-          <img class="cover" :src="col.picUrl" alt>
+          <img class="cover" :src="col.picUrl || colDetail.coverImgUrl" alt>
         </div>
         <p class="col-name">
           {{col.name}}
@@ -106,13 +106,15 @@
             {{tag}}
           </span>
         </div>
-        <scroll-pane class="col-desc-wrapper">
-          <div class="p-wrapper">
-            <p class="col-desc" v-for="(p, index) in descFormatter(this.colDetail.desc)" :key="index">
-              {{p}}
-            </p>
-          </div>
-        </scroll-pane>
+        <div class="desc">
+          <scroll-pane class="col-desc-wrapper">
+            <div class="p-wrapper">
+              <p class="col-desc" v-for="(p, index) in descFormatter(this.colDetail.desc)" :key="index">
+                {{p}}
+              </p>
+            </div>
+          </scroll-pane>
+        </div>
       </div>
     </transition>
   </div>
@@ -208,10 +210,8 @@ $fixed-header: 50px;
 .pg-col-list {
   position: fixed;
   z-index: 2;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  width: 100%;
+  height: 100%;
   background-color: $color-bg-d;
   color: $color-text-t-1;
   .col-header {
@@ -385,18 +385,21 @@ $fixed-header: 50px;
         border-radius: 5px;
       }
     }
-    .col-desc-wrapper {
+    .desc {
       padding: 5px 0;
       flex-grow: 1;
       position: relative;
       overflow: hidden;
-      .p-wrapper {
+      .col-desc-wrapper {
         position: absolute;
         height: 100%;
         width: 100%;
-        .col-desc {
-          padding: 5px 0;
-          line-height: 1.5;
+        // overflow: hidden;
+        .p-wrapper {
+          .col-desc {
+            padding: 5px 0;
+            line-height: 1.5;
+          }
         }
       }
     }

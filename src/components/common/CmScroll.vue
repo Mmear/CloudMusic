@@ -40,6 +40,11 @@ export default {
       type: Boolean,
       default: false
     },
+    // 是否水平滚动
+    scrollX: {
+      type: Boolean,
+      default: false
+    },
     // 延迟刷新
     refreshDelay: {
       type: Number,
@@ -49,13 +54,24 @@ export default {
   methods: {
     _initScroll() {
       // 避免初始渲染未完成便初始化
+      let setting = {
+        probeType: this.probeType,
+        click: this.click,
+      }
       if (!this.$refs.wrapper) {
         return;
       }
-      this.scroll = new BScroll(this.$refs.wrapper, {
-        probeType: this.probeType,
-        click: this.click
-      })
+      if (this.scrollX) {
+        Object.assign(setting, {
+          scrollX: true,
+          momentum: false,
+          snap: {
+            threshold: 0.3,
+            speed: 400
+          }
+        })
+      }
+      this.scroll = new BScroll(this.$refs.wrapper, setting);
       // 派发监听滚动位置事件
       if (this.listenScroll) {
         const me  = this;
@@ -96,6 +112,12 @@ export default {
     },
     scrollToElement() {
       this.scroll && this.scroll.scrollToElement.apply(this.scroll, arguments);
+    },
+    on() {
+      this.scroll && this.scroll.on.apply(this.scroll, arguments);
+    },
+    getCurrentPage() {
+      this.scroll && this.scroll.getCurrentPage.apply(this.scroll, arguments);
     }
   },
   mounted () {

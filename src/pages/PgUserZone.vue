@@ -109,9 +109,6 @@
         </div>
       </div>
     </scroll-pane>
-    <transition name="slide">
-      <router-view></router-view>
-    </transition>
   </div>
 </template>
 
@@ -121,8 +118,6 @@ import { mapState } from "vuex";
 export default {
   data() {
     return {
-      colCreated: [],
-      colCollected: []
     };
   },
   components: {
@@ -130,27 +125,18 @@ export default {
   },
   methods: {},
   watch: {
-    user: {
-      handler: function(newVal, oldVal) {
-        if (newVal.cols) {
-          this.colCreated = newVal.cols.filter(
-            item => item.creator.userId === this.user.id
-          );
-          this.colCollected = newVal.cols.filter(
-            item => item.creator.userId !== this.user.id
-          );
-        }
-      },
-      deep: true
-    }
   },
   computed: {
-    // colCreated() {
-    //   return this.user.cols.filter(item => item.creator.userId === user.id);
-    // },
-    // colCollected() {
-    //   return this.user.cols.filter(item => item.creator.userId === user.id);
-    // },
+    colCreated() {
+      if (this.user) {
+        return this.user.cols.filter(item => item.creator.userId === this.user.id);
+      }
+    },
+    colCollected() {
+      if (this.user) {
+        return this.user.cols.filter(item => item.creator.userId === this.user.id);
+      }
+    },
     ...mapState(["identified", "user"])
   }
 };
@@ -268,10 +254,6 @@ export default {
         }
       }
     }
-  }
-  .slide-enter-active,
-  .slide-leave-active {
-    transition: 0.3s all ease;
   }
 }
 </style>

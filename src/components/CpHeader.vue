@@ -5,9 +5,9 @@
       <span><i class="iconfont icon-category"></i></span>
     </div>
     <div class="menu-tab"><menu-tab></menu-tab></div>
-    <div class="toggle search flex align-center">
+    <router-link tag="div" :to="{name: 'search'}" class="toggle search flex align-center">
       <span><i class="iconfont icon-search"></i></span>
-    </div>
+    </router-link>
   </div>
 </template>
 

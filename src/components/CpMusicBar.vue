@@ -139,7 +139,7 @@ import lyricScroll from "@/components/common/CmScroll";
 import { mapState, mapActions, mapMutations } from "vuex";
 import songApi from "@/api/composionQuery";
 import { PLAY_MODE } from "@/store/state";
-import { timeParser, domUtils } from "@/utils/utils";
+import { timeParser } from "@/utils/utils";
 import Lyric from "@/utils/lyricParser";
 
 //* 导入anime动画库
@@ -394,22 +394,15 @@ export default {
       let offsetWidth = Math.min(0, Math.max(-window.innerWidth, left + deltaX));
       this.touch.percent = Math.abs(offsetWidth / window.innerWidth);
     },
-    slideEnd(e) {
-      let offsetWidth = null;
+    slideEnd() {
       if (!this.inLyricPage) {
         // 左滑
         if (this.touch.percent > 0.1) {
-          offsetWidth = - window.innerWidth;
           this.inLyricPage = true;
-        } else {
-          offsetWidth = 0;
         }
       } else {
         if (this.touch.percent < 0.9) {
-          offsetWidth = 0;
           this.inLyricPage = false;
-        } else {
-          offsetWidth = -window.innerWidth;
         }
       }
     },
@@ -439,7 +432,7 @@ export default {
       this.setCurrentSong(this.playlist[newVal]);
     },
     // 检测currentSong的变化
-    currentSong(newVal, oldVal) {
+    currentSong(newVal) {
       // 无歌曲播放，退出
       if (!newVal || !newVal.id) {
         return;
@@ -455,7 +448,7 @@ export default {
       this._fetchData(newVal);
     },
     // 切换播放与暂停状态
-    playing(newVal, oldVal) {
+    playing(newVal) {
       //! audio.canplay()会调用setPlayingStatus(true); 但此时this.lyric可能还没初始化 也可能已经初始化，因为url与lyric的获取是各自异步的
       //! 不想这么麻烦可以去action中将url与lyric获取绑定在一起获取
       const audio = this.$refs.audio;

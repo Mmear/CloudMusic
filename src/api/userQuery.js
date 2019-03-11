@@ -13,19 +13,24 @@ export const emailLogin = (email, pass) => {
 }
 export const cellPhoneLogin = (cellphone, pass) => {
   return instance.get(`/login/cellphone?phone=${cellphone}&password=${pass}`).then(res => {
-    if (res.data.code === 502) {
-      return Promise.reject('密码错误');
-    } else if (res.data.code === 200) {
-      const data = res.data.profile;
-      return Promise.resolve({
-        id: data.userId,
-        avatarUrl: data.avatarUrl,
-        name: data.nickname,
-        signature: data.signature,
-        backgroundUrl: data.backgroundUrl,
-      });
+    res.data.code === 200
+    const data = res.data.profile;
+    return Promise.resolve({
+      id: data.userId,
+      avatarUrl: data.avatarUrl,
+      name: data.nickname,
+      signature: data.signature,
+      backgroundUrl: data.backgroundUrl,
+    });
+  }).catch(err => {
+    if (err.response) {
+      console.log(err.response.data);
+      console.log(err.response.status);
+    } else {
+      console.log('Error', err.message);
     }
-  }).catch(errHandler);
+    return Promise.reject(err);
+  });
 }
 export const logOut = () => {
   return instance.get(`/logout`).then(res => {

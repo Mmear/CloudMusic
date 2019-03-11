@@ -20,15 +20,15 @@ instance.interceptors.request.use(
 );
 
 //添加响应拦截器
-instance.interceptors.response.use(
-  response => {
-    return Promise.resolve(response);
-  },
-  error => {
-    //输出错误信息
-    return Promise.reject(error);
-  }
-);
+// instance.interceptors.response.use(
+//   response => {
+//     return Promise.resolve(response);
+//   },
+//   error => {
+//     //输出错误信息
+//     return Promise.reject(error);
+//   }
+// );
 
 Plugin.install = function(Vue) {
   Vue.axios = instance;

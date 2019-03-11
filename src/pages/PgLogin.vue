@@ -26,9 +26,11 @@
         </span>
         <input class="password" type="password" ref="password">
       </div>
-      <div class="hint"></div>
     </div>
     <div class="confirm-btn" @click="login">登录</div>
+    <div class="hint" :class="{active: error}">
+      <span><i class="iconfont icon-close"></i></span> 账号或密码错误
+    </div>
     <div class="loading-wrapper">
       <loading v-show="loading"></loading>
     </div>
@@ -43,7 +45,8 @@ export default {
   data() {
     return {
       emailInput: false,
-      loading: false
+      loading: false,
+      error: false,
     };
   },
   methods: {
@@ -60,17 +63,19 @@ export default {
         userApi
           .emailLogin(accountNum, password)
           .then(this.loginHandler)
-          .catch(err => {
-            console.log(err);
-          });
+          .catch(errHandler);
       } else {
         userApi
           .cellPhoneLogin(accountNum, password)
           .then(this.loginHandler)
-          .catch(err => {
-            console.log(err);
-          });
+          .catch(this.errHandler);
       }
+    },
+    errHandler(err) {
+      console.log('Got', err);
+      this.loading = false;
+      this.error = true;
+      setTimeout(() => this.error = false, 1500);
     },
     loginHandler(res) {
       const user = {};
@@ -200,6 +205,29 @@ export default {
     color: $color-text-t-1;
     font-size: $font-size-m;
     border-radius: 3px;
+  }
+  .hint {
+    position: absolute;
+    bottom: 0;
+    margin: 0 auto;
+    transform: translateY(100%);
+    width: 70%;
+    padding: 10px 0;
+    font-size: $font-size-l;
+    color: $color-text-t-1;
+    background-color: transparent;
+    border: 2px solid $color-text-t-3;
+    text-align: center;
+    transition: all .4s ease;
+    .iconfont {
+      border: 1px solid;
+      border-radius: 50%;
+      padding: 2px;
+      font-size: $font-size-m;
+    }
+    &.active {
+      transform: translateY(-50px);
+    }
   }
   &.login-enter-active,
   &.login-leave-active {

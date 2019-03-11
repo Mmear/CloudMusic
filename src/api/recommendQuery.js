@@ -73,6 +73,7 @@ export const getColListDetail = id => {
           name: data.creator.nickname,
           userId: data.creator.userId,
         },
+        coverImgUrl: data.coverImgUrl,
         shareCount: data.shareCount,
         commentCount: data.commentCount,
         playCount: data.playCount,
@@ -81,6 +82,16 @@ export const getColListDetail = id => {
     })
     .catch(errHandler);
 };
+export const getHotSearch = () => {
+  return instance.get('/search/hot').then(res => {
+    return Promise.resolve(res.data.result.hots);
+  }).catch(errHandler);
+}
+export const searchByKeyword = keyword => {
+  return instance.get(`/search/suggest?keywords=${keyword}`).then(res => {
+    return Promise.resolve(res.data.result);
+  }).catch(errHandler);
+}
 export const recommend = {
   getBanners,
   getRecomColList,

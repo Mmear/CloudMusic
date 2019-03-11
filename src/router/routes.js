@@ -4,10 +4,11 @@
 //  路由懒加载
 const index = () => import("@/pages/PgIndex");
 const userZone = () => import("@/pages/PgUserZone");
-const indexRadio = () => import("@/pages/PgRadio");
 const indexMusic = () => import("@/pages/PgIntro");
 const colList = () => import("@/pages/PgColList");
 const login = () => import("@/pages/PgLogin");
+const search = () => import("@/pages/PgSearch");
+
 const routes = [
   {
     path: "/",
@@ -22,20 +23,7 @@ const routes = [
         name: "indexMusic",
         path: "music",
         component: indexMusic,
-        // children: [
-        //   {
-        //     name: "colList",
-        //     path: "col/:col",
-        //     props: true,
-        //     component: colList
-        //   }
-        // ]
       },
-      {
-        name: "indexRadio",
-        path: "radio",
-        component: indexRadio
-      }
     ]
   },
   {
@@ -48,7 +36,7 @@ const routes = [
     name: "login",
     components: {
       // default: index,
-      loginView: login
+      extraView: login
     }
   },
   {
@@ -56,7 +44,14 @@ const routes = [
     name: "colList",
     props: true,
     components: {
-      colView: colList
+      extraView: colList
+    }
+  },
+  {
+    path: "/search",
+    name: "search",
+    components: {
+      searchView: search
     }
   }
 ];

@@ -7,18 +7,18 @@
     <!-- 顶部 -->
     <app-header></app-header>
     <!-- 下方操作区域 -->
-    <main class="app-content flex flex-column">
+    <main class="app-content flex">
       <keep-alive> 
-        <router-view></router-view>
+        <transition name="slideLeft" mode="out-in">
+          <router-view></router-view>
+        </transition>
       </keep-alive>
     </main>
     <!-- 播放器 -->
     <app-player></app-player>
-    <transition name="slide">
-      <router-view name="loginView"></router-view>
-    </transition>
-    <transition name="slide">
-      <router-view name="colView"></router-view>
+    <transition name="slideLeft">
+      <router-view name="extraView"></router-view>
+      <router-view name="searchView"></router-view>
     </transition>
   </div>
 </template>
@@ -30,6 +30,7 @@ export default {
   name: 'app',
   data () {
     return {
+      tName: '',
     }
   },
   components: {
@@ -37,6 +38,18 @@ export default {
     appPlayer
   },
   methods: {
+  },
+  watch: {
+    // '$route': function(to, from) {
+    //   const paths = to.path.split('/');
+    //   if (paths.indexOf('music') > 0) {
+    //   console.log("music")
+    //     this.tName = 'slideLeft';
+    //   } else {
+    //   console.log("user")
+    //     this.tName = 'slideRight';
+    //   }
+    // }
   }
 }
 </script>
@@ -47,12 +60,13 @@ export default {
   flex-direction: column;
   .app-content {
     flex-grow: 1;
+    position: relative;
   }
-  .slide-enter-active, .slide-leave-active {
-    transition: .3s all ease;
+  .slideLeft-enter-active,.slideLeft-leave-active {
+    transition: .2s all ease;
   }
-  .slide-enter, .slide-leave-to {
-    transform: translateX(-100%);
+  .slideLeft-enter,.slideLeft-leave-to {
+    transform: translateX(100%);
   }
 }
 </style>

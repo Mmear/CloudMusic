@@ -51,7 +51,7 @@
   content: "\e6a5";
 }
 
-.icon-moreunfold:before {
+.icon-more-unfold:before {
   content: "\e6a6";
 }
 
@@ -71,11 +71,11 @@
   content: "\e6ad";
 }
 
-.icon-gerenzhongxin:before {
+.icon-user-center:before {
   content: "\e70b";
 }
 
-.icon-icondownload:before {
+.icon-icon-download:before {
   content: "\e714";
 }
 
@@ -87,28 +87,8 @@
   content: "\e71d";
 }
 
-.icon-favoritesfilling:before {
-  content: "\e730";
-}
-
-.icon-icon-7:before {
-  content: "\e642";
-}
-
-.icon-icon-8:before {
-  content: "\e643";
-}
-
-.icon-icon-9:before {
-  content: "\e644";
-}
-
 .icon-icon-rank:before {
   content: "\e646";
-}
-
-.icon-icon-10:before {
-  content: "\e645";
 }
 
 .icon-icon-emotion:before {
@@ -122,27 +102,6 @@
 .icon-icon-weather:before {
   content: "\e650";
 }
-
-.icon-icon-:before {
-  content: "\e648";
-}
-
-.icon-icon-1:before {
-  content: "\e649";
-}
-
-.icon-icon-2:before {
-  content: "\e64a";
-}
-
-.icon-icon-3:before {
-  content: "\e64b";
-}
-
-.icon-icon-4:before {
-  content: "\e64c";
-}
-
 .icon-icon-search:before {
   content: "\e653";
 }

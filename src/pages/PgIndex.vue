@@ -1,7 +1,7 @@
 <!-- 音乐主页 -->
 <template>
   <div class="pg-index flex flex-column">
-    <menu-tab></menu-tab> 
+    <!-- <menu-tab></menu-tab>  -->
     <keep-alive>
       <router-view></router-view>
     </keep-alive>
