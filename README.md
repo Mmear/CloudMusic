@@ -57,11 +57,5 @@ npm run build
 
 ## 页面展示
 
-![login](sample/login.png)
 ![index](sample/index.png)
-![normalplayer_1](sample/normalplayer_1.png)
-![normalplayer_2](sample/normalplayer_2.png)
 ![userzone](sample/userzone.png)
-![search](sample/search.png)
-![search_2](sample/search_2.png)
-
