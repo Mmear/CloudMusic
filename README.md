@@ -1,66 +1,67 @@
-通过 Vue 框架开发的仿网易云音乐移动端项目 😘
-API 来源：[Binaryify/NeteaseCloudMusicApi](https://github.com/Binaryify/NeteaseCloudMusicApi)
+# CloudMusic
 
+通过`Vue`框架开发的仿网易云音乐移动端项目 😘
 
-### 可能用到的API
-#### 信息获取
-* 登录相关
-  * 获取用户详情
-  * 获取用户信息、歌单、收藏数量
-  * 获取用户歌单
-  * 获取用户电台
-  * 获取用户[我喜欢的音乐]列表
-  * 获取用户播放记录
-* 获取歌单详情（歌单内容）
-* 歌单评论
-* 电台节目评论
-* 歌曲评论（只获取热门评论）
-* 获取音乐URL
-* 检测音乐是否可用
-* 获取歌词
-* 获取歌曲详情 &　获取专辑内容（获取封面）
+## 技术栈
 
-* 获取歌手单曲
-* 获取歌手专辑
-* 获取歌手描述
+1. 网易云音乐 API [Binaryify/NeteaseCloudMusicApi](https://github.com/Binaryify/NeteaseCloudMusicApi)
+2. Vue 全家桶
+3. axios
+4. vue-lazyloader
+5. better-scroll
 
-#### 推荐类
-* 热搜
-* 搜索接口
-* 私人FM　1
-* 每日推荐　2
-* 获取网友精选歌单（歌单标题、描述）3
-* 排行榜（各类）4
-* 歌手榜
-* 推荐歌单 5
-* 推荐新音乐 6
-* 推荐电台 7
-#### 操作
-* 喜欢音乐
-* 登录（手机/邮箱）
-* 在歌单中添加或删除歌曲
-* 搜索接口
+## 功能
 
-## Project setup
+* [x] 基本音乐播放功能
+* [x] 推荐歌单、音乐的获取
+* [x] 登录功能（登录后获取个人歌单）
+* [x] 搜索功能（不完善）
+* [ ] 排行榜
+* [ ] 私人 FM
+
+### 待开发页面
+
+* [ ] 歌手主页 / 专辑主页
+* [ ] 评论页
+...
+## 运行方法
+
+### 将项目和 API 克隆至本地
 
 ```
-npm install
+git@github.com:Mmear/CloudMusic.git
+git@github.com:Binaryify/NeteaseCloudMusicApi.git
 ```
 
-### Compiles and hot-reloads for development
+### 安装依赖并运行 API 服务
 
 ```
-npm run serve
+cd .\NeteaseCloudMusicApi\
+npm run install
+node .\app.js
 ```
 
-### Compiles and minifies for production
+### 安装本项目依赖
 
 ```
+cd .\CloudMusic\
+npm run install
+```
+
+### 运行 or 构建
+
+```
+npm run serve // visit http://localhost:8080
 npm run build
 ```
 
-### Lints and fixes files
+## 页面展示
 
-```
-npm run lint
-```)
+![login](sample/login.png)
+![index](sample/index.png)
+![normalplayer_1](sample/normalplayer_1.png)
+![normalplayer_2](sample/normalplayer_2.png)
+![userzone](sample/userzone.png)
+![search](sample/search.png)
+![search_2](sample/search_2.png)
+
